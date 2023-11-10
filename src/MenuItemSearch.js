@@ -1,4 +1,3 @@
-// MenuItemSearch.js
 import React, { useState, useEffect } from 'react';
 
 const MenuItemSearch = ({ itemId }) => {
@@ -15,21 +14,17 @@ const MenuItemSearch = ({ itemId }) => {
     }
   }, [itemId]);
 
-  console.log(itemDetails); // Add this line
+  console.log(itemDetails);
 
-  if (!itemDetails) {
-    return <p>Item data is not available</p>;
+  if (!itemDetails || itemDetails.status === 'Entregado') {
+    return null; // If item status is 'Entregado', don't render
   }
 
   return (
-    <div className="col-md-4 mb-3">
-      <div className="card">
-        <div className="card-body">
-          <h5 className="card-title">{itemDetails.name}</h5>
-          <p className="card-text">Price: ${itemDetails.price}</p>
-          {/* Add any other details you want to display */}
-        </div>
-      </div>
+    <div>
+      <h5>{itemDetails.name}</h5>
+      <p>Price: ${itemDetails.price}</p>
+      {/* Add any other details you want to display */}
     </div>
   );
 };

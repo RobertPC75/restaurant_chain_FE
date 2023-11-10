@@ -1,4 +1,3 @@
-// EditForm.js
 import React, { useState } from 'react';
 import axios from 'axios';
 
@@ -7,7 +6,6 @@ const EditForm = ({ item, onClose }) => {
   const [editedPrice, setEditedPrice] = useState(item.price);
 
   const handleEdit = () => {
-    // Send a request to update the menu item
     axios.put(`https://restaurant-chain-api.onrender.com/menu/${item.menu_id}/edit`, null, {
       params: {
         nombre: editedName,
@@ -15,35 +13,44 @@ const EditForm = ({ item, onClose }) => {
       }
     })
     .then(response => {
-      console.log(response.data.message);
-      // Display success message and ask the user to refresh the page
-      alert('Edit successful! Please refresh the page.');
-      // Optionally, you can also refresh the page programmatically
-      // window.location.reload();
-      // Close the edit form
+      const successMessage = response.data.message;
+      console.log(successMessage);
+      alert(successMessage);
       onClose();
+      // Reload the page
+      window.location.reload();
     })
     .catch(error => {
       console.error('Error updating menu item:', error);
-      console.log(error.response.data); // Log the detailed error response
+      console.log(error.response.data);
     });
   };
 
   return (
     <div className="edit-form">
-      <label>Name:</label>
-      <input
-        type="text"
-        value={editedName}
-        onChange={(e) => setEditedName(e.target.value)}
-      />
-      <label>Price:</label>
-      <input
-        type="number"
-        value={editedPrice}
-        onChange={(e) => setEditedPrice(e.target.value)}
-      />
-      <button onClick={handleEdit}>Confirm Changes</button>
+      <form>
+        <div className="mb-3">
+          <label htmlFor="editedName" className="form-label">Name:</label>
+          <input
+            type="text"
+            className="form-control"
+            id="editedName"
+            value={editedName}
+            onChange={(e) => setEditedName(e.target.value)}
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="editedPrice" className="form-label">Price:</label>
+          <input
+            type="number"
+            className="form-control"
+            id="editedPrice"
+            value={editedPrice}
+            onChange={(e) => setEditedPrice(e.target.value)}
+          />
+        </div>
+        <button type="button" className="btn btn-primary" onClick={handleEdit}>Confirm Changes</button>
+      </form>
     </div>
   );
 };

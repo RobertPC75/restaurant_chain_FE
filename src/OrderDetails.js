@@ -1,4 +1,3 @@
-// OrderDetails.js
 import React, { useState, useEffect } from 'react';
 import MenuItemSearch from './MenuItemSearch';
 
@@ -13,15 +12,19 @@ const OrderDetails = ({ orderId }) => {
       .catch((error) => console.error(`Error fetching details for order ${orderId}:`, error));
   }, [orderId]);
 
-  console.log(details); // Add this line
+  console.log(details);
 
   return (
-    <div>
+    <div className="border p-3 mt-3">
       <h4>Order Details:</h4>
       {details.length > 0 ? (
-        details.map((detail) => (
-          <MenuItemSearch key={detail.detail_id} itemId={detail.item_id} />
-        ))
+        <ul className="list-group">
+          {details.map((detail) => (
+            <li key={detail.detail_id} className="list-group-item">
+              <MenuItemSearch itemId={detail.item_id} />
+            </li>
+          ))}
+        </ul>
       ) : (
         <p>No items for this order.</p>
       )}
