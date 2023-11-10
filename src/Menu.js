@@ -10,7 +10,7 @@ const Menu = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [editItem, setEditItem] = useState(null);
   const [showAddPlateForm, setShowAddPlateForm] = useState(false);
-  const itemsPerPage = 9;
+  const itemsPerPage = 12;
 
   useEffect(() => {
     axios.get(`https://restaurant-chain-api.onrender.com/menu/all_info`)
@@ -64,7 +64,7 @@ const Menu = () => {
         <AddPlateForm onPlateAdded={handlePlateAdded} />
       )}
 
-      <div className="row row-cols-1 row-cols-md-3 g-4">
+      <div className="row row-cols-1 row-cols-md-4 g-4">
         {displayedMenuItems.map(item => (
           <div className="col" key={item.menu_id}>
             <MenuItem
