@@ -11,3 +11,29 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Add this to your existing CSS or create a new CSS file */
+.orders-container {
+  display: flex;
+}
+
+.order-sidebar {
+  width: 200px;
+  padding: 20px;
+  background-color: #f4f4f4;
+  border-right: 1px solid #ddd;
+  overflow-y: auto;
+}
+
+.order-details-container {
+  flex: 1;
+  padding: 20px;
+}
+
+.list-group-item {
+  cursor: pointer;
+}
+
+.list-group-item:hover {
+  background-color: #eee;
+}

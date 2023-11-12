@@ -1,42 +1,50 @@
+// Orders.js
 import React, { useState, useEffect } from 'react';
 import OrderDetails from './OrderDetails';
+import OrderSidebar from './OrderSidebar';
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
-  const [showDelivered, setShowDelivered] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [showAllOrders, setShowAllOrders] = useState(false);
 
   useEffect(() => {
     // Fetch list of all orders
     fetch('https://restaurant-chain-api.onrender.com/orders/all_info')
       .then((response) => response.json())
-      .then((data) => {
-        // Filter orders based on showDelivered state
-        const filteredOrders = showDelivered
-          ? data
-          : data.filter((order) => order.order_status !== 'Entregado');
-
-        setOrders(filteredOrders);
-      })
+      .then((data) => setOrders(data))
       .catch((error) => console.error('Error fetching orders:', error));
-  }, [showDelivered]);
+  }, []);
+
+  const handleOrderClick = (orderId) => {
+    setSelectedOrderId(orderId);
+  };
+
+  const handleToggleShowAllOrders = () => {
+    setShowAllOrders((prevShowAllOrders) => !prevShowAllOrders);
+  };
+
+  const filteredOrders = showAllOrders
+    ? orders
+    : orders.filter((order) => order.order_status === 'En proceso' || order.order_status === 'En cola');
 
   return (
-    <div>
-      <h2>Orders</h2>
-      <button
-        className="btn btn-primary mb-3"
-        onClick={() => setShowDelivered(!showDelivered)}
-      >
-        {showDelivered ? 'Show Current' : 'Show History'}
-      </button>
-      {orders.map((order) => (
-        <div key={order.order_id}>
-          <p>Order ID: {order.order_id}</p>
-          <p>Status: {order.order_status}</p>
-          <OrderDetails orderId={order.order_id} />
-          <hr />
-        </div>
-      ))}
+    <div className="orders-container">
+      <OrderSidebar
+        orders={filteredOrders}
+        selectedOrderId={selectedOrderId}
+        onOrderClick={handleOrderClick}
+        showAllOrders={showAllOrders}
+        onToggleShowAllOrders={handleToggleShowAllOrders}
+      />
+      <div className="order-details-container">
+        <h2>Orders</h2>
+        {selectedOrderId ? (
+          <OrderDetails orderId={selectedOrderId} />
+        ) : (
+          <p>Select an order from the list on the left to view details.</p>
+        )}
+      </div>
     </div>
   );
 };

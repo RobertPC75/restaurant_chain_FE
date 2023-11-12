@@ -13,7 +13,6 @@ const SideBar = () => {
           </a>
           .
         </p>
-      {/* Otros elementos de la barra lateral */}
     </div>
   );
 };

@@ -1,3 +1,4 @@
+// OrderDetails.js
 import React, { useState, useEffect } from 'react';
 import MenuItemSearch from './MenuItemSearch';
 
@@ -12,7 +13,30 @@ const OrderDetails = ({ orderId }) => {
       .catch((error) => console.error(`Error fetching details for order ${orderId}:`, error));
   }, [orderId]);
 
-  console.log(details);
+  const handleRemoveItem = async (detailId) => {
+    // Ask for confirmation before removing the item
+    const confirmRemove = window.confirm('Are you sure you want to remove this item from the order?');
+
+    if (!confirmRemove) {
+      return; // Do nothing if the user cancels the confirmation
+    }
+
+    try {
+      const response = await fetch(`https://restaurant-chain-api.onrender.com/orders/${orderId}/remove_item/${detailId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        // Update the details after successful removal
+        const updatedDetails = details.filter((detail) => detail.detail_id !== detailId);
+        setDetails(updatedDetails);
+      } else {
+        console.error('Failed to remove item from order.');
+      }
+    } catch (error) {
+      console.error('Error removing item from order:', error);
+    }
+  };
 
   return (
     <div className="border p-3 mt-3">
@@ -20,8 +44,14 @@ const OrderDetails = ({ orderId }) => {
       {details.length > 0 ? (
         <ul className="list-group">
           {details.map((detail) => (
-            <li key={detail.detail_id} className="list-group-item">
+            <li key={detail.detail_id} className="list-group-item d-flex justify-content-between align-items-center">
               <MenuItemSearch itemId={detail.item_id} />
+              <button
+                className="btn btn-danger"
+                onClick={() => handleRemoveItem(detail.detail_id)}
+              >
+                Remove
+              </button>
             </li>
           ))}
         </ul>
