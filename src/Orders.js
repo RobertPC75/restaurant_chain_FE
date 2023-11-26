@@ -24,9 +24,23 @@ const Orders = () => {
     setShowAllOrders((prevShowAllOrders) => !prevShowAllOrders);
   };
 
+  const updateOrderList = async () => {
+    try {
+      const response = await fetch('https://restaurant-chain-api.onrender.com/orders/all_info');
+      if (response.ok) {
+        const updatedOrders = await response.json();
+        setOrders(updatedOrders);
+      } else {
+        console.error('Error fetching updated orders:', response.status);
+      }
+    } catch (error) {
+      console.error('Error fetching updated orders:', error);
+    }
+  };
+
   const filteredOrders = showAllOrders
     ? orders
-    : orders.filter((order) => order.order_status === 'En proceso' || order.order_status === 'En cola');
+    : orders.filter((order) => order.order_status === 'En proceso' || order.order_status === 'Entregado');
 
   return (
     <div className="orders-container">
@@ -40,7 +54,7 @@ const Orders = () => {
       <div className="order-details-container">
         <h2>Orders</h2>
         {selectedOrderId ? (
-          <OrderDetails orderId={selectedOrderId} />
+          <OrderDetails orderId={selectedOrderId} updateOrderList={updateOrderList} />
         ) : (
           <p>Select an order from the list on the left to view details.</p>
         )}

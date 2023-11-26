@@ -1,5 +1,4 @@
 // AddDishForm.js
-
 import React, { useState, useEffect } from 'react';
 
 const AddDishForm = ({ orderId, onHideForm, updateOrderDetails }) => {
@@ -35,9 +34,11 @@ const AddDishForm = ({ orderId, onHideForm, updateOrderDetails }) => {
       } else {
         const errorData = await response.json();
         console.error('Error al agregar el plato a la orden:', errorData);
+        alert('Error al agregar el plato. Por favor, inténtelo de nuevo.');
       }
     } catch (error) {
       console.error('Error adding dish to order:', error);
+      alert('Error al agregar el plato. Por favor, inténtelo de nuevo.');
     }
   };
 
