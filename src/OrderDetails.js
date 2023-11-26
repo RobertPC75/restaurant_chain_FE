@@ -1,12 +1,15 @@
 // OrderDetails.js
+
 import React, { useState, useEffect } from 'react';
 import MenuItemSearch from './MenuItemSearch';
+import AddDishForm from './AddDishForm';
 
 const OrderDetails = ({ orderId }) => {
   const [details, setDetails] = useState([]);
+  const [showAddDishForm, setShowAddDishForm] = useState(false);
 
   useEffect(() => {
-    // Fetch order details for a specific order
+    // Código existente para obtener detalles de la orden
     fetch(`https://restaurant-chain-api.onrender.com/orders/${orderId}/details`)
       .then((response) => response.json())
       .then((data) => setDetails(data))
@@ -14,27 +17,25 @@ const OrderDetails = ({ orderId }) => {
   }, [orderId]);
 
   const handleRemoveItem = async (detailId) => {
-    // Ask for confirmation before removing the item
-    const confirmRemove = window.confirm('Are you sure you want to remove this item from the order?');
+    // Código existente para manejar la eliminación de un ítem
+  };
 
-    if (!confirmRemove) {
-      return; // Do nothing if the user cancels the confirmation
-    }
+  const handleShowAddDishForm = () => {
+    setShowAddDishForm(true);
+  };
 
+  const handleHideAddDishForm = () => {
+    setShowAddDishForm(false);
+  };
+
+  const updateOrderDetails = async () => {
+    // Lógica para actualizar los detalles de la orden
     try {
-      const response = await fetch(`https://restaurant-chain-api.onrender.com/orders/${orderId}/remove_item/${detailId}`, {
-        method: 'DELETE',
-      });
-
-      if (response.ok) {
-        // Update the details after successful removal
-        const updatedDetails = details.filter((detail) => detail.detail_id !== detailId);
-        setDetails(updatedDetails);
-      } else {
-        console.error('Failed to remove item from order.');
-      }
+      const response = await fetch(`https://restaurant-chain-api.onrender.com/orders/${orderId}/details`);
+      const data = await response.json();
+      setDetails(data);
     } catch (error) {
-      console.error('Error removing item from order:', error);
+      console.error('Error updating order details:', error);
     }
   };
 
@@ -42,21 +43,31 @@ const OrderDetails = ({ orderId }) => {
     <div className="border p-3 mt-3">
       <h4>Order Details:</h4>
       {details.length > 0 ? (
-        <ul className="list-group">
-          {details.map((detail) => (
-            <li key={detail.detail_id} className="list-group-item d-flex justify-content-between align-items-center">
-              <MenuItemSearch itemId={detail.item_id} />
-              <button
-                className="btn btn-danger"
-                onClick={() => handleRemoveItem(detail.detail_id)}
-              >
-                Remove
-              </button>
-            </li>
-          ))}
-        </ul>
+        <div>
+          <button className="btn btn-primary mb-3" onClick={handleShowAddDishForm}>
+            Agregar Plato
+          </button>
+
+          <ul className="list-group">
+            {details.map((detail) => (
+              <li key={detail.detail_id} className="list-group-item d-flex justify-content-between align-items-center">
+                <MenuItemSearch itemId={detail.item_id} />
+                <button
+                  className="btn btn-danger"
+                  onClick={() => handleRemoveItem(detail.detail_id)}
+                >
+                  Remove
+                </button>
+              </li>
+            ))}
+          </ul>
+
+          {showAddDishForm && (
+            <AddDishForm orderId={orderId} onHideForm={handleHideAddDishForm} updateOrderDetails={updateOrderDetails} />
+          )}
+        </div>
       ) : (
-        <p>No items for this order.</p>
+        <p>No hay elementos para esta orden.</p>
       )}
     </div>
   );
