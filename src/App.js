@@ -1,12 +1,13 @@
 //app.js
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { ClerkProvider, SignedIn, SignedOut, SignIn } from '@clerk/clerk-react';
+import MyNavBar from './MyNavBar';
+import SideBar from './SideBar';  // Add this line
 import Home from './Home';
 import Menu from './Menu';
 import Orders from './Orders';
-import SideBar from './SideBar';
-import MyNavBar from './MyNavBar';
-import { ClerkProvider, SignedIn, SignedOut, SignIn} from '@clerk/clerk-react';
+
 
 function App() {
   return (
