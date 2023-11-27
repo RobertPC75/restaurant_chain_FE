@@ -100,7 +100,7 @@ const SideBar = () => {
   
 
   return (
-    <Card style={{ maxWidth: '200px', padding: '10px' }}>
+    <Card className="mb-3" style={{ maxWidth: '200px', padding: '10px', wordBreak: 'break-all' }}>
       <Card.Body>
         {isLoaded && isSignedIn && (
           <>
@@ -136,7 +136,7 @@ const SideBar = () => {
                       onChange={(e) => handleInputChange('phone_number', e.target.value)}
                     />
                   </Form.Group>
-                  <Button variant="primary" onClick={handleEdit}>
+                  <Button variant="primary" className="mt-3" onClick={handleEdit}>
                     Change
                   </Button>
                 </Form>

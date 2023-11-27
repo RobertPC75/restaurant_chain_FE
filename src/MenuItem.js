@@ -1,8 +1,11 @@
+// MenuItem.js
+
 import React, { useState } from 'react';
 import EditForm from './EditForm';
 import axios from 'axios';
+import ShoppingCartButton from './ShoppingCartButton';
 
-const MenuItem = ({ item, onEditClick, onDeleteClick }) => {
+const MenuItem = ({ item, onEditClick, onDeleteClick, onAddToCartClick }) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const handleEditClick = () => {
@@ -35,15 +38,20 @@ const MenuItem = ({ item, onEditClick, onDeleteClick }) => {
       <div className="card-body d-flex flex-column">
         <h5 className="card-title">{item.name}</h5>
         <p className="card-text">Price: ${item.price}</p>
-        <div className="mt-auto">
-          {isEditing ? (
-            <EditForm item={item} onClose={handleEditFormClose} />
-          ) : (
-            <div className="d-flex justify-content-end">
-              <button className="btn btn-primary" onClick={handleEditClick}>Edit</button>
-              <button className="btn btn-danger" onClick={handleDeleteClick} style={{ marginLeft: '5px' }}>Delete</button>
-            </div>
-          )}
+        <div className="d-flex justify-content-between mt-auto">
+          <div>
+            {isEditing ? (
+              <EditForm item={item} onClose={handleEditFormClose} />
+            ) : (
+              <div className="d-flex">
+                <button className="btn btn-primary" onClick={handleEditClick}>Edit</button>
+                <button className="btn btn-danger" onClick={handleDeleteClick} style={{ marginLeft: '5px' }}>Delete</button>
+              </div>
+            )}
+          </div>
+          <div>
+            <ShoppingCartButton onAddToCartClick={onAddToCartClick} item={item} />
+          </div>
         </div>
       </div>
     </div>
