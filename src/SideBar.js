@@ -13,6 +13,27 @@ const SideBar = () => {
     phone_number: '',
   });
 
+  const addNewClient = async (name, clerkId) => {
+    try {
+      const response = await axios.post('https://restaurant-chain-api.onrender.com/clients/add', null, {
+        params: {
+        name: name,
+        clerkid: clerkId,
+        },
+      });
+  
+      console.log('New client added:', response.data);
+    } catch (error) {
+      if (error.response && error.response.status === 422 && error.response.data.detail) {
+        const validationErrors = error.response.data.detail;
+        console.error('Validation Error:', validationErrors);
+      } else {
+        console.error('Error adding new client:', error.response);
+      }
+    }
+  };
+  
+
   const fetchClientData = async (clerkId) => {
     try {
       console.log('Fetching client data for clerkId:', clerkId);
@@ -25,14 +46,27 @@ const SideBar = () => {
         phone_number: response.data.phone_number || '',
       });
     } catch (error) {
-      console.error('Error fetching client data:', error);
+      if (error.response && error.response.status === 404) {
+        console.log('Clerk ID not found. Adding the client...');
+        await addNewClient(user.firstName, clerkId);
+        // Retry fetching client data after adding the client
+        await fetchClientData(clerkId);
+      } else {
+        console.error('Error fetching client data:', error);
+      }
     }
   };
 
   useEffect(() => {
-    if (isSignedIn && userId) {
-      fetchClientData(userId);
-    }
+    const fetchData = async () => {
+      if (isSignedIn && userId) {
+        await fetchClientData(userId);
+      }
+    };
+  
+    fetchData();
+  
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSignedIn, userId]);
 
   const handleInputChange = (field, value) => {
@@ -52,11 +86,18 @@ const SideBar = () => {
   
       // Refresh client data
       fetchClientData(userId);
+  
+      // Show a success pop-up
+      window.alert('Changes were successful!');
     } catch (error) {
       console.error('Error editing client data:', error.response);
       console.error('Request payload:', error.config.data);
+  
+      // You might want to handle errors differently, e.g., show an error pop-up
+      window.alert('Error editing client data. Please try again.');
     }
-  };   
+  };
+  
 
   return (
     <Card style={{ maxWidth: '200px', padding: '10px' }}>
